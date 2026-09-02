@@ -27,7 +27,6 @@ body {
 
 .page-shell {
   min-height: 100vh;
-  border-top: 8px solid #452b21;
   background: #ffffff;
   display: flex;
   align-items: center;
@@ -160,7 +159,6 @@ body {
 @media (max-width: 680px) {
   .page-shell {
     padding: 20px 12px;
-    border-top-width: 6px;
   }
 
   .vintage-watch-container {
