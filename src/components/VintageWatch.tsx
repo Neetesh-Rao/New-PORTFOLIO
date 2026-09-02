@@ -5,10 +5,7 @@ export const VintageWatch: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
-    // Initial sync
     setTime(new Date());
-
-    // Update every second in lockstep with system clock
     const interval = setInterval(() => {
       setTime(new Date());
     }, 1000);
@@ -24,9 +21,9 @@ export const VintageWatch: React.FC = () => {
 
     const totalSeconds = hours * 3600 + minutes * 60 + seconds;
 
-    const sAngle = (totalSeconds % 60) * 6; // 360 / 60 = 6 deg
-    const mAngle = ((totalSeconds % 3600) / 60) * 6; // smooth with seconds
-    const hAngle = ((totalSeconds % 43200) / 3600) * 30; // 360 / 12 = 30 deg
+    const sAngle = (totalSeconds % 60) * 6; // 6 deg per second
+    const mAngle = ((totalSeconds % 3600) / 60) * 6; // smooth minute hand
+    const hAngle = ((totalSeconds % 43200) / 3600) * 30; // smooth hour hand
 
     const tString = time.toLocaleTimeString([], {
       hour: "2-digit",
@@ -82,124 +79,105 @@ export const VintageWatch: React.FC = () => {
     >
       <div className="vintage-watch-wrapper">
         <svg
-          viewBox="0 0 200 230"
+          viewBox="0 0 200 216"
           className="vintage-watch-svg"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Outer Bronze/Brass Bezel Gradient */}
-            <radialGradient id="bezelGrad" cx="35%" cy="30%" r="70%">
-              <stop offset="0%" stopColor="#d5b57f" />
-              <stop offset="35%" stopColor="#966d43" />
-              <stop offset="70%" stopColor="#5a3d24" />
-              <stop offset="100%" stopColor="#301e12" />
+            {/* Sleek Bronze/Brass Bezel */}
+            <radialGradient id="sleekBezel" cx="35%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#d8be92" />
+              <stop offset="45%" stopColor="#9c754d" />
+              <stop offset="80%" stopColor="#604229" />
+              <stop offset="100%" stopColor="#3b2617" />
             </radialGradient>
 
-            {/* Inner Brass Rim */}
-            <linearGradient id="innerRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#e8cf9f" />
-              <stop offset="50%" stopColor="#8d673b" />
-              <stop offset="100%" stopColor="#4e331c" />
-            </linearGradient>
-
             {/* Antique Parchment Aged Dial Face */}
-            <radialGradient id="agedDialGrad" cx="50%" cy="48%" r="58%">
-              <stop offset="0%" stopColor="#fffef9" />
-              <stop offset="65%" stopColor="#faf2de" />
-              <stop offset="85%" stopColor="#ede0c2" />
-              <stop offset="100%" stopColor="#dcc7a0" />
+            <radialGradient id="sleekDial" cx="50%" cy="48%" r="62%">
+              <stop offset="0%" stopColor="#fffdf9" />
+              <stop offset="65%" stopColor="#f8f1df" />
+              <stop offset="90%" stopColor="#ece0c4" />
+              <stop offset="100%" stopColor="#ded0b2" />
             </radialGradient>
 
             {/* Subtle Glass Dome Sheen */}
-            <linearGradient id="glassReflection" x1="0%" y1="0%" x2="70%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.55" />
-              <stop offset="35%" stopColor="#ffffff" stopOpacity="0.1" />
+            <linearGradient id="sleekGlass" x1="0%" y1="0%" x2="70%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.45" />
+              <stop offset="35%" stopColor="#ffffff" stopOpacity="0.08" />
               <stop offset="60%" stopColor="#ffffff" stopOpacity="0" />
             </linearGradient>
 
-            {/* Pocket watch loop crown gradient */}
-            <linearGradient id="crownGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#ecd3a6" />
-              <stop offset="50%" stopColor="#8f6b40" />
-              <stop offset="100%" stopColor="#432a18" />
+            {/* Crown gradient */}
+            <linearGradient id="sleekCrown" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#e2cca3" />
+              <stop offset="50%" stopColor="#8c6840" />
+              <stop offset="100%" stopColor="#4c321d" />
             </linearGradient>
 
             {/* Drop Shadow filter */}
-            <filter id="watchShadow" x="-20%" y="-15%" width="145%" height="145%">
-              <feDropShadow dx="0" dy="7" stdDeviation="6" floodColor="#1e1108" floodOpacity="0.32" />
+            <filter id="sleekShadow" x="-20%" y="-15%" width="145%" height="145%">
+              <feDropShadow dx="0" dy="5" stdDeviation="5" floodColor="#22140a" floodOpacity="0.22" />
             </filter>
 
             {/* Hand Shadow filter */}
-            <filter id="handShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="1" dy="2" stdDeviation="1.5" floodColor="#2c1e14" floodOpacity="0.4" />
+            <filter id="sleekHandShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0.8" dy="1.5" stdDeviation="1.2" floodColor="#26190f" floodOpacity="0.3" />
             </filter>
           </defs>
 
-          {/* Pocket Watch Top Ring / Bow & Winder */}
-          <g className="pocket-watch-top" filter="url(#watchShadow)">
-            {/* Top Loop / Bow */}
-            <path
-              d="M 82 25 C 82 10, 118 10, 118 25"
-              fill="none"
-              stroke="url(#crownGrad)"
-              strokeWidth="5"
-              strokeLinecap="round"
-            />
-            {/* Crown / Winder Knob */}
+          {/* Sleek Top Crown */}
+          <g transform="translate(0, 4)" filter="url(#sleekShadow)">
             <rect
-              x="92"
-              y="20"
-              width="16"
-              height="12"
-              rx="2.5"
-              fill="url(#crownGrad)"
-              stroke="#2e1d11"
-              strokeWidth="0.8"
+              x="94"
+              y="4"
+              width="12"
+              height="8"
+              rx="2"
+              fill="url(#sleekCrown)"
+              stroke="#382415"
+              strokeWidth="0.6"
             />
-            {/* Winder ribs */}
-            <line x1="95" y1="21" x2="95" y2="31" stroke="#2e1d11" strokeWidth="0.8" />
-            <line x1="98" y1="21" x2="98" y2="31" stroke="#2e1d11" strokeWidth="0.8" />
-            <line x1="102" y1="21" x2="102" y2="31" stroke="#2e1d11" strokeWidth="0.8" />
-            <line x1="105" y1="21" x2="105" y2="31" stroke="#2e1d11" strokeWidth="0.8" />
+            <line x1="97" y1="5" x2="97" y2="11" stroke="#382415" strokeWidth="0.6" />
+            <line x1="100" y1="5" x2="100" y2="11" stroke="#382415" strokeWidth="0.6" />
+            <line x1="103" y1="5" x2="103" y2="11" stroke="#382415" strokeWidth="0.6" />
           </g>
 
           {/* Main Watch Case */}
-          <g transform="translate(0, 30)" filter="url(#watchShadow)">
-            {/* Outer Stepped Bezel */}
-            <circle cx="100" cy="100" r="92" fill="url(#bezelGrad)" stroke="#2b1a0e" strokeWidth="1.5" />
-            <circle cx="100" cy="100" r="86" fill="none" stroke="url(#innerRimGrad)" strokeWidth="2.5" />
-            <circle cx="100" cy="100" r="83" fill="#2b1a0e" />
+          <g transform="translate(0, 16)" filter="url(#sleekShadow)">
+            {/* Slim Outer Bezel */}
+            <circle cx="100" cy="100" r="92" fill="url(#sleekBezel)" stroke="#382415" strokeWidth="1" />
+            {/* Step line */}
+            <circle cx="100" cy="100" r="88.5" fill="none" stroke="#e8d5b5" strokeWidth="0.8" opacity="0.6" />
+            {/* Dial background */}
+            <circle cx="100" cy="100" r="86.5" fill="url(#sleekDial)" stroke="#523924" strokeWidth="0.8" />
 
-            {/* Dial Background Face */}
-            <circle cx="100" cy="100" r="81" fill="url(#agedDialGrad)" stroke="#694d33" strokeWidth="0.8" />
-
-            {/* Railroad Track (Double Ring for Minutes) */}
-            <circle cx="100" cy="100" r="77.5" fill="none" stroke="#4a3728" strokeWidth="1" opacity="0.8" />
-            <circle cx="100" cy="100" r="71" fill="none" stroke="#4a3728" strokeWidth="0.7" opacity="0.8" />
+            {/* Railroad Track (Delicate Double Ring) */}
+            <circle cx="100" cy="100" r="82.5" fill="none" stroke="#523b28" strokeWidth="0.75" opacity="0.7" />
+            <circle cx="100" cy="100" r="77" fill="none" stroke="#523b28" strokeWidth="0.5" opacity="0.7" />
 
             {/* 60 Minute / Second Ticks */}
             {minuteTicks.map(({ isHour, angle, index }) => (
               <line
                 key={index}
                 x1="100"
-                y1={isHour ? "71" : "73.5"}
+                y1={isHour ? "77" : "79"}
                 x2="100"
-                y2="77.5"
-                stroke="#382618"
-                strokeWidth={isHour ? "1.8" : "0.75"}
+                y2="82.5"
+                stroke="#3e2a1a"
+                strokeWidth={isHour ? "1.4" : "0.6"}
                 transform={`rotate(${angle} 100 100)`}
-                opacity={isHour ? 0.95 : 0.65}
+                opacity={isHour ? 0.9 : 0.55}
               />
             ))}
 
-            {/* 5-minute diamond / dot markers */}
+            {/* 5-minute delicate dot markers */}
             {romanNumerals.map(({ angle }, i) => (
               <circle
                 key={i}
                 cx="100"
-                cy="69"
-                r="1.4"
-                fill="#822e1b"
+                cy="74.5"
+                r="1"
+                fill="#8f2d1b"
                 transform={`rotate(${angle} 100 100)`}
               />
             ))}
@@ -207,10 +185,9 @@ export const VintageWatch: React.FC = () => {
             {/* Roman Numerals */}
             <g className="roman-numerals">
               {romanNumerals.map(({ text, angle }) => {
-                // Calculate position on radius ~ 55
                 const rad = ((angle - 90) * Math.PI) / 180;
-                const x = 100 + 55 * Math.cos(rad);
-                const y = 100 + 55 * Math.sin(rad) + 4.5; // slight font vertical baseline centering
+                const x = 100 + 60.5 * Math.cos(rad);
+                const y = 100 + 60.5 * Math.sin(rad) + 4.2;
                 return (
                   <text
                     key={text}
@@ -225,80 +202,70 @@ export const VintageWatch: React.FC = () => {
               })}
             </g>
 
-            {/* Vintage Dial Embellishment / Brand Text */}
+            {/* Sleek Vintage Dial Typography */}
             <g className="vintage-brand-text">
-              <text x="100" y="68" textAnchor="middle" className="dial-sub-text-title">
-                CHRONOMÈTRE
+              <text x="100" y="66" textAnchor="middle" className="dial-sub-text-title">
+                CHRONOMETER
               </text>
-              <line x1="82" y1="71" x2="118" y2="71" stroke="#684a32" strokeWidth="0.5" opacity="0.6" />
-              <text x="100" y="132" textAnchor="middle" className="dial-sub-text-small">
+              <text x="100" y="136" textAnchor="middle" className="dial-sub-text-small">
                 AUTOMATIC
-              </text>
-              <text x="100" y="140" textAnchor="middle" className="dial-sub-text-tiny">
-                EST. 2026
               </text>
             </g>
 
-            {/* Inner Decorative Golden Ring */}
-            <circle cx="100" cy="100" r="38" fill="none" stroke="#6c4e33" strokeWidth="0.6" strokeDasharray="1.5 2.5" opacity="0.4" />
+            {/* Subtle inner accent ring */}
+            <circle cx="100" cy="100" r="42" fill="none" stroke="#755639" strokeWidth="0.5" strokeDasharray="1 2.5" opacity="0.3" />
 
-            {/* Hands Layer with Shadows */}
-            {/* Hour Hand (Ornate Antique Spade Hand) */}
+            {/* Hands Layer */}
+            {/* Hour Hand (Sleek Tapered Lance Hand) */}
             <g
               className="watch-hand hour-hand"
               style={{ transform: `rotate(${hourAngle}deg)` }}
-              filter="url(#handShadow)"
+              filter="url(#sleekHandShadow)"
             >
               <path
-                d="M 98 100 L 98 70 C 94 67, 93 61, 97 54 C 99 50, 100 44, 100 42 C 100 44, 101 50, 103 54 C 107 61, 106 67, 102 70 L 102 100 L 102.5 112 C 102.5 114, 97.5 114, 97.5 112 Z"
-                fill="#20150d"
+                d="M 98.6 100 L 99 64 L 97.8 54 L 100 36 L 102.2 54 L 101 64 L 101.4 100 L 101.8 110 C 101.8 111.5, 98.2 111.5, 98.2 110 Z"
+                fill="#1f1610"
               />
-              {/* Spade Cutout */}
-              <circle cx="100" cy="58" r="2.2" fill="url(#agedDialGrad)" />
             </g>
 
-            {/* Minute Hand (Breguet / Tapered Spear Hand) */}
+            {/* Minute Hand (Sleek Slender Leaf Hand) */}
             <g
               className="watch-hand minute-hand"
               style={{ transform: `rotate(${minuteAngle}deg)` }}
-              filter="url(#handShadow)"
+              filter="url(#sleekHandShadow)"
             >
               <path
-                d="M 98.6 100 L 98.8 45 C 95 41, 96 33, 100 27 C 104 33, 105 41, 101.2 45 L 101.4 100 L 101.8 116 C 101.8 118, 98.2 118, 98.2 116 Z"
-                fill="#20150d"
+                d="M 99 100 L 99.2 45 L 98.2 36 L 100 22 L 101.8 36 L 100.8 45 L 101 100 L 101.4 114 C 101.4 115.5, 98.6 115.5, 98.6 114 Z"
+                fill="#1f1610"
               />
-              {/* Moon Eye Cutout */}
-              <circle cx="100" cy="37" r="2.2" fill="url(#agedDialGrad)" />
             </g>
 
-            {/* Second Hand (Vintage Red Ticking Needle Hand with Counterbalance) */}
+            {/* Second Hand (Slim Red Ticking Needle Hand) */}
             <g
               className="watch-hand second-hand"
               style={{ transform: `rotate(${secondAngle}deg)` }}
-              filter="url(#handShadow)"
+              filter="url(#sleekHandShadow)"
             >
-              {/* Needle pointer */}
-              <line x1="100" y1="122" x2="100" y2="24" stroke="#a72a1d" strokeWidth="1.1" strokeLinecap="round" />
-              {/* Tapered end */}
-              <polygon points="98.8,32 101.2,32 100,20" fill="#a72a1d" />
+              {/* Slender needle */}
+              <line x1="100" y1="120" x2="100" y2="18" stroke="#a02619" strokeWidth="0.9" strokeLinecap="round" />
               {/* Counterbalance Ring */}
-              <circle cx="100" cy="112" r="3.2" fill="#a72a1d" />
-              <circle cx="100" cy="112" r="1.4" fill="url(#agedDialGrad)" />
+              <circle cx="100" cy="111" r="2.8" fill="#a02619" />
+              <circle cx="100" cy="111" r="1.2" fill="url(#sleekDial)" />
             </g>
 
-            {/* Center Pinion / Brass Nut */}
-            <circle cx="100" cy="100" r="5.5" fill="url(#bezelGrad)" stroke="#2b1a0e" strokeWidth="0.8" />
-            <circle cx="100" cy="100" r="2.5" fill="#e8cf9f" />
-            <circle cx="99" cy="99" r="0.8" fill="#ffffff" opacity="0.75" />
+            {/* Center Pinion Boss */}
+            <circle cx="100" cy="100" r="4.2" fill="url(#sleekBezel)" stroke="#382415" strokeWidth="0.6" />
+            <circle cx="100" cy="100" r="1.8" fill="#e8d5b5" />
+            <circle cx="99.4" cy="99.4" r="0.6" fill="#ffffff" opacity="0.85" />
 
-            {/* Glass Curved Glare Overlay */}
+            {/* Sleek Curved Glass Highlight */}
             <ellipse
-              cx="92"
-              cy="76"
-              rx="62"
-              ry="42"
-              fill="url(#glassReflection)"
-              transform="rotate(-25 92 76)"
+              cx="88"
+              cy="72"
+              rx="56"
+              ry="38"
+              fill="url(#sleekGlass)"
+              transform="rotate(-28 88 72)"
               pointerEvents="none"
             />
           </g>
