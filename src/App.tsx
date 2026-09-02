@@ -1,6 +1,9 @@
+import VintageWatch from "./components/VintageWatch";
+
 export default function App() {
   return (
     <main className="page-shell">
+      <VintageWatch />
       <img
         className="profile-photo"
         src="/images/notebook-profile.png"
