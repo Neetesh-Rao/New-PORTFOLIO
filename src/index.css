@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* Keep the page quiet so the notebook remains the only visual focus. */
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #171717;
+  background: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  background: #ffffff;
+}
+
+.page-shell {
+  min-height: 100vh;
+  border-top: 8px solid #452b21;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.profile-photo {
+  display: block;
+  width: auto;
+  max-width: min(700px, calc(100vw - 32px));
+  max-height: min(86vh, 820px);
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+}
+
+@media (max-width: 680px) {
+  .page-shell {
+    padding: 20px 12px;
+    border-top-width: 6px;
+  }
+
+  .profile-photo {
+    max-width: calc(100vw - 24px);
+    max-height: 85vh;
+  }
+}
