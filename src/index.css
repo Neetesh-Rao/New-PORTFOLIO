@@ -108,17 +108,16 @@ body {
   fill: #735133;
 }
 
-/* Vintage Real Time Floating Tooltip Badge */
+/* Vintage Real Time Floating Text on Hover */
 .vintage-time-badge {
   position: absolute;
   top: calc(100% + 6px);
   left: 50%;
-  transform: translateX(-50%) translateY(-6px);
-  background: #fefbf5;
-  border: 1px solid #dacab0;
-  box-shadow: 0 4px 12px rgba(45, 30, 18, 0.12);
-  border-radius: 6px;
-  padding: 5px 9px;
+  transform: translateX(-50%) translateY(-4px);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 2px 0;
   text-align: center;
   white-space: nowrap;
   opacity: 0;
@@ -133,17 +132,19 @@ body {
 
 .badge-time {
   font-family: "Cinzel", Georgia, serif;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   color: #382415;
   letter-spacing: 0.8px;
+  line-height: 1.2;
 }
 
 .badge-date {
   font-family: "Playfair Display", Georgia, serif;
-  font-size: 9px;
+  font-size: 9.5px;
   color: #72563e;
-  margin-top: 1px;
+  margin-top: 2px;
+  line-height: 1.2;
 }
 
 .profile-photo {
