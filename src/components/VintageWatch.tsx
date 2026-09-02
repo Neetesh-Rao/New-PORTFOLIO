@@ -1,9 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 
 export const VintageWatch: React.FC = () => {
   const [time, setTime] = useState<Date>(() => new Date());
   const [isHovered, setIsHovered] = useState(false);
+  const [isPlayingSound, setIsPlayingSound] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Initialize clock timer
   useEffect(() => {
     setTime(new Date());
     const interval = setInterval(() => {
@@ -13,7 +16,66 @@ export const VintageWatch: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Compute smooth continuous angles to prevent backward jumps
+  // Audio setup for realistic tick-tick ambient sound
+  useEffect(() => {
+    const audio = new Audio("/tick-tick.mp3");
+    audio.loop = true;
+    audio.volume = 0.55;
+    audioRef.current = audio;
+
+    const playAudio = async () => {
+      try {
+        await audio.play();
+        setIsPlayingSound(true);
+        cleanupListeners();
+      } catch {
+        // Autoplay policy waiting for user gesture
+        setIsPlayingSound(false);
+      }
+    };
+
+    const handleFirstInteraction = () => {
+      playAudio();
+    };
+
+    const cleanupListeners = () => {
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("keydown", handleFirstInteraction);
+    };
+
+    // Try playing immediately
+    playAudio();
+
+    // Listen for first interaction to unlock browser audio autoplay
+    window.addEventListener("click", handleFirstInteraction, { once: true });
+    window.addEventListener("touchstart", handleFirstInteraction, { once: true });
+    window.addEventListener("keydown", handleFirstInteraction, { once: true });
+
+    return () => {
+      cleanupListeners();
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
+
+  // Toggle audio on clock click
+  const handleWatchClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!audioRef.current) return;
+
+    if (audioRef.current.paused) {
+      audioRef.current
+        .play()
+        .then(() => setIsPlayingSound(true))
+        .catch(() => {});
+    } else {
+      audioRef.current.pause();
+      setIsPlayingSound(false);
+    }
+  };
+
+  // Compute continuous smooth angles
   const { secondAngle, minuteAngle, hourAngle, timeString, dateString } = useMemo(() => {
     const hours = time.getHours();
     const minutes = time.getMinutes();
@@ -22,8 +84,8 @@ export const VintageWatch: React.FC = () => {
     const totalSeconds = hours * 3600 + minutes * 60 + seconds;
 
     const sAngle = (totalSeconds % 60) * 6; // 6 deg per second
-    const mAngle = ((totalSeconds % 3600) / 60) * 6; // smooth minute hand
-    const hAngle = ((totalSeconds % 43200) / 3600) * 30; // smooth hour hand
+    const mAngle = ((totalSeconds % 3600) / 60) * 6;
+    const hAngle = ((totalSeconds % 43200) / 3600) * 30;
 
     const tString = time.toLocaleTimeString([], {
       hour: "2-digit",
@@ -73,9 +135,11 @@ export const VintageWatch: React.FC = () => {
   return (
     <aside
       className="vintage-watch-container"
+      onClick={handleWatchClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      aria-label={`Current time: ${timeString}`}
+      title={isPlayingSound ? "Click to mute ticking sound" : "Click to play ticking sound"}
+      aria-label={`Current time: ${timeString}. Sound is ${isPlayingSound ? "on" : "off"}. Click to toggle sound.`}
     >
       <div className="vintage-watch-wrapper">
         <svg
@@ -271,10 +335,13 @@ export const VintageWatch: React.FC = () => {
           </g>
         </svg>
 
-        {/* Live Vintage Time Tooltip on Hover */}
+        {/* Live Vintage Time Tooltip & Sound Status on Hover */}
         <div className={`vintage-time-badge ${isHovered ? "visible" : ""}`}>
           <div className="badge-time">{timeString}</div>
           <div className="badge-date">{dateString}</div>
+          <div className="badge-sound-status">
+            {isPlayingSound ? "🔊 Tick sound ON" : "🔇 Sound muted (click to play)"}
+          </div>
         </div>
       </div>
     </aside>
